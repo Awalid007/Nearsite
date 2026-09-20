@@ -1,0 +1,6 @@
+{
+  "name": "Nearsite",
+  "description": "Nearsite builds fast, beautiful websites for local businesses that want to get found online, win more customers, and look more professional than the competition.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
