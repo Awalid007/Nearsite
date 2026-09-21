@@ -14,19 +14,18 @@ import { Footer } from './components/Footer';
 import { QuoteModal } from './components/QuoteModal';
 import { ContactModal } from './components/ContactModal';
 import { BlogModal } from './components/BlogModal';
-import { LegalModal } from './components/LegalModal';
 import { ContactPage } from './components/ContactPage';
 import { BlogPage } from './components/BlogPage';
+import { LegalPage } from './components/LegalPage';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState<'home' | 'contact' | 'blog'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'contact' | 'blog' | 'privacy' | 'terms'>('home');
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [quotePlan, setQuotePlan] = useState<string | undefined>(undefined);
   const [quoteBusiness, setQuoteBusiness] = useState<string | undefined>(undefined);
 
   const [isContactOpen, setIsContactOpen] = useState(false);
   const [isBlogOpen, setIsBlogOpen] = useState(false);
-  const [legalModalType, setLegalModalType] = useState<'privacy' | 'terms' | null>(null);
 
   useEffect(() => {
     const handleHash = () => {
@@ -36,9 +35,9 @@ export default function App() {
       } else if (hash === '#blog') {
         setCurrentView('blog');
       } else if (hash === '#privacy') {
-        setLegalModalType('privacy');
+        setCurrentView('privacy');
       } else if (hash === '#terms') {
-        setLegalModalType('terms');
+        setCurrentView('terms');
       } else if (hash === '#home' || hash === '' || hash.startsWith('#about') || hash.startsWith('#pricing') || hash.startsWith('#services')) {
         setCurrentView('home');
       }
@@ -56,6 +55,9 @@ export default function App() {
 
   const handleNavigateHome = (sectionId?: string) => {
     setCurrentView('home');
+    if (window.location.hash && (window.location.hash === '#privacy' || window.location.hash === '#terms' || window.location.hash === '#contact' || window.location.hash === '#blog')) {
+      window.history.replaceState(null, '', window.location.pathname + (sectionId ? `#${sectionId}` : ''));
+    }
     if (sectionId) {
       setTimeout(() => {
         const el = document.getElementById(sectionId);
@@ -72,11 +74,19 @@ export default function App() {
 
   const navigateToContact = () => {
     setCurrentView('contact');
+    window.location.hash = '#contact';
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const navigateToBlog = () => {
     setCurrentView('blog');
+    window.location.hash = '#blog';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const navigateToLegal = (type: 'privacy' | 'terms') => {
+    setCurrentView(type);
+    window.location.hash = `#${type}`;
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -89,6 +99,7 @@ export default function App() {
         onOpenQuote={() => handleOpenQuote()}
         onOpenContact={navigateToContact}
         onOpenBlog={navigateToBlog}
+        onOpenLegal={navigateToLegal}
       />
 
       {/* Main Content: Dedicated Page or Homepage */}
@@ -102,6 +113,13 @@ export default function App() {
           <BlogPage
             onBackToHome={() => handleNavigateHome()}
             onOpenQuote={() => handleOpenQuote()}
+          />
+        ) : currentView === 'privacy' || currentView === 'terms' ? (
+          <LegalPage
+            initialType={currentView}
+            onBackToHome={() => handleNavigateHome()}
+            onOpenQuote={() => handleOpenQuote()}
+            onOpenContact={navigateToContact}
           />
         ) : (
           <>
@@ -162,8 +180,8 @@ export default function App() {
         onOpenQuote={() => handleOpenQuote()}
         onOpenBlog={navigateToBlog}
         onOpenContact={navigateToContact}
-        onOpenPrivacy={() => setLegalModalType('privacy')}
-        onOpenTerms={() => setLegalModalType('terms')}
+        onOpenPrivacy={() => navigateToLegal('privacy')}
+        onOpenTerms={() => navigateToLegal('terms')}
       />
 
       {/* Interactive Modals */}
@@ -183,18 +201,6 @@ export default function App() {
         isOpen={isBlogOpen}
         onClose={() => setIsBlogOpen(false)}
         onOpenQuote={() => handleOpenQuote()}
-      />
-
-      <LegalModal
-        isOpen={!!legalModalType}
-        type={legalModalType}
-        onSelectType={(newType) => setLegalModalType(newType)}
-        onClose={() => {
-          setLegalModalType(null);
-          if (window.location.hash === '#privacy' || window.location.hash === '#terms') {
-            window.history.replaceState(null, '', window.location.pathname);
-          }
-        }}
       />
     </div>
   );

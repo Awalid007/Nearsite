@@ -6,7 +6,8 @@ interface NavbarProps {
   onOpenQuote: () => void;
   onOpenContact: () => void;
   onOpenBlog: () => void;
-  currentView?: 'home' | 'contact' | 'blog';
+  onOpenLegal?: (type: 'privacy' | 'terms') => void;
+  currentView?: 'home' | 'contact' | 'blog' | 'privacy' | 'terms';
   onNavigateHome?: (sectionId?: string) => void;
 }
 
@@ -14,6 +15,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenQuote,
   onOpenContact,
   onOpenBlog,
+  onOpenLegal,
   currentView = 'home',
   onNavigateHome,
 }) => {
@@ -163,6 +165,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                     >
                       FAQ
                     </button>
+                    <div className="my-1 border-t border-white/5" />
+                    <button
+                      onClick={() => {
+                        setIsPagesDropdownOpen(false);
+                        if (onOpenLegal) onOpenLegal('privacy');
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors flex items-center justify-between"
+                    >
+                      <span>Privacy Policy</span>
+                      <span className="text-[10px] text-emerald-400 font-mono">Legal</span>
+                    </button>
+                    <button
+                      onClick={() => {
+                        setIsPagesDropdownOpen(false);
+                        if (onOpenLegal) onOpenLegal('terms');
+                      }}
+                      className="w-full text-left px-4 py-2 text-xs text-slate-300 hover:text-emerald-400 hover:bg-emerald-500/10 transition-colors flex items-center justify-between"
+                    >
+                      <span>Terms of Service</span>
+                      <span className="text-[10px] text-emerald-400 font-mono">Legal</span>
+                    </button>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -295,6 +318,34 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               Contact
             </button>
+            <div className="grid grid-cols-2 gap-2 pt-1 pb-1">
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  if (onOpenLegal) onOpenLegal('privacy');
+                }}
+                className={`text-left px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                  currentView === 'privacy'
+                    ? 'bg-emerald-500/20 text-emerald-400 font-bold'
+                    : 'text-slate-400 hover:text-white bg-white/5'
+                }`}
+              >
+                Privacy Policy
+              </button>
+              <button
+                onClick={() => {
+                  setIsMobileMenuOpen(false);
+                  if (onOpenLegal) onOpenLegal('terms');
+                }}
+                className={`text-left px-3 py-1.5 text-xs rounded-lg transition-colors ${
+                  currentView === 'terms'
+                    ? 'bg-emerald-500/20 text-emerald-400 font-bold'
+                    : 'text-slate-400 hover:text-white bg-white/5'
+                }`}
+              >
+                Terms of Service
+              </button>
+            </div>
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
