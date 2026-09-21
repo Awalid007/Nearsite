@@ -34,19 +34,21 @@ export interface NewsletterPayload {
   createdAt: string;
 }
 
+export const CEO_APP_URL = 'https://i-want-to-build-for-myself-only-which-is.rork.app';
+
 const getEndpointUrl = (): string | null => {
   const url = import.meta.env.VITE_APP_API_URL || import.meta.env.VITE_APP_WEBHOOK_URL;
   return url && url.trim().length > 0 ? url.trim() : null;
 };
 
 /**
- * Sends booking details to trigger confirmation email from Nearsiteahmad@gmail.com
- * and forwards to external app/webhook if configured.
+ * Sends booking details to trigger confirmation email from Nearsiteahmad@gmail.com,
+ * syncs to the Nearsite CEO feed, and forwards to external app/webhook if configured.
  */
 export async function submitBookingToApp(booking: BookingPayload): Promise<{ success: boolean; error?: string }> {
   const endpoint = getEndpointUrl();
 
-  // 1. Dispatch confirmation email via server API
+  // 1. Dispatch confirmation email & sync to CEO feed via server API
   try {
     fetch('/api/send-booking-confirmation', {
       method: 'POST',
@@ -66,15 +68,39 @@ export async function submitBookingToApp(booking: BookingPayload): Promise<{ suc
     console.warn('[Nearsite Email Service] Dispatch error:', err);
   }
 
-  // 2. Forward to user's external app / webhook
+  // 2. Format specifically for Nearsite CEO App structure
+  const ceoBookingRecord = {
+    id: `book-${Date.now().toString(36)}`,
+    name: `${booking.firstName} ${booking.lastName || ''}`.trim(),
+    business: booking.bizName || 'Local Business',
+    email: booking.email,
+    date: booking.date || new Date().toISOString().slice(0, 10),
+    time: booking.timeSlot || '10:00 AM',
+    topic: `Discovery call — ${booking.selectedFeatures?.join(', ') || 'Custom Website'}`,
+    status: 'requested',
+    createdAt: booking.createdAt || new Date().toISOString(),
+  };
+
+  // Sync to CEO feed endpoint
+  try {
+    fetch('/api/ceo-feed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'booking', data: ceoBookingRecord }),
+    }).catch(() => {});
+  } catch {}
+
+  // 3. Forward to user's external app / webhook
   const payload = {
     eventType: 'booking_created',
+    ceoAppUrl: CEO_APP_URL,
     timestamp: new Date().toISOString(),
+    ceoBookingRecord,
     data: booking,
   };
 
   if (!endpoint) {
-    console.info('[Nearsite App Integration] Booking recorded locally (Set VITE_APP_API_URL or VITE_APP_WEBHOOK_URL to forward):', payload);
+    console.info(`[Nearsite CEO Sync] Booking linked for CEO Dashboard (${CEO_APP_URL}/bookings):`, payload);
     return { success: true };
   }
 
@@ -101,8 +127,8 @@ export async function submitBookingToApp(booking: BookingPayload): Promise<{ suc
 }
 
 /**
- * Sends contact inquiry to trigger notification email from Nearsiteahmad@gmail.com
- * and forwards to external app/webhook if configured.
+ * Sends contact inquiry to trigger notification email from Nearsiteahmad@gmail.com,
+ * syncs to the Nearsite CEO feed, and forwards to external app/webhook if configured.
  */
 export async function submitContactToApp(contact: ContactPayload): Promise<{ success: boolean; error?: string }> {
   const endpoint = getEndpointUrl();
@@ -122,15 +148,42 @@ export async function submitContactToApp(contact: ContactPayload): Promise<{ suc
     console.warn('[Nearsite Email Service] Dispatch error:', err);
   }
 
-  // 2. Forward to external app if configured
+  // 2. Format specifically for Nearsite CEO App structure
+  const now = new Date().toISOString();
+  const ceoLeadRecord = {
+    id: `lead-${Date.now().toString(36)}`,
+    name: contact.name,
+    business: contact.businessName || 'Website Inquiry',
+    email: contact.email,
+    interestedIn: contact.serviceInterest || 'growth',
+    source: 'Website form',
+    message: contact.message,
+    status: 'new',
+    notes: [],
+    createdAt: now,
+    updatedAt: now,
+  };
+
+  // Sync to CEO feed endpoint
+  try {
+    fetch('/api/ceo-feed', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'lead', data: ceoLeadRecord }),
+    }).catch(() => {});
+  } catch {}
+
+  // 3. Forward to external app if configured
   const payload = {
     eventType: 'contact_submitted',
-    timestamp: new Date().toISOString(),
+    ceoAppUrl: CEO_APP_URL,
+    timestamp: now,
+    ceoLeadRecord,
     data: contact,
   };
 
   if (!endpoint) {
-    console.info('[Nearsite App Integration] Contact inquiry captured locally:', payload);
+    console.info(`[Nearsite CEO Sync] Contact lead recorded for CEO Dashboard (${CEO_APP_URL}/leads):`, payload);
     return { success: true };
   }
 

@@ -249,18 +249,29 @@ export function generateAdminNotificationHtml(data: BookingEmailData): string {
   const { firstName, lastName, email, bizName, bizType, budget, date, timeSlot, selectedFeatures, notes, createdAt } = data;
 
   return `
-    <h2>New Discovery Call Booked!</h2>
-    <p>A new client has scheduled a call on Nearsite:</p>
-    <ul>
-      <li><strong>Client:</strong> ${firstName} ${lastName || ''}</li>
-      <li><strong>Email:</strong> <a href="mailto:${email}">${email}</a></li>
-      <li><strong>Business:</strong> ${bizName} (${bizType || 'Local Business'})</li>
-      <li><strong>Date & Time:</strong> ${date || 'N/A'} at ${timeSlot || 'N/A'}</li>
-      <li><strong>Budget:</strong> ${budget || 'Not specified'}</li>
-      <li><strong>Requested Package:</strong> ${selectedFeatures ? selectedFeatures.join(', ') : 'All-Inclusive $699'}</li>
-      <li><strong>Notes:</strong> ${notes || 'None'}</li>
-      <li><strong>Timestamp:</strong> ${createdAt || new Date().toISOString()}</li>
-    </ul>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; color: #111; line-height: 1.6;">
+      <h2 style="color: #10b981; margin-bottom: 8px;">🚀 New Discovery Call Booked!</h2>
+      <p style="font-size: 15px; margin-top: 0;">A new client has scheduled a discovery call on your website:</p>
+      
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px;">
+          <li style="margin-bottom: 8px;"><strong>Client:</strong> ${firstName} ${lastName || ''}</li>
+          <li style="margin-bottom: 8px;"><strong>Email:</strong> <a href="mailto:${email}" style="color: #2563eb; font-weight: 600;">${email}</a></li>
+          <li style="margin-bottom: 8px;"><strong>Business:</strong> ${bizName} (${bizType || 'Local Business'})</li>
+          <li style="margin-bottom: 8px;"><strong>Date & Time:</strong> ${date || 'N/A'} at ${timeSlot || 'N/A'}</li>
+          <li style="margin-bottom: 8px;"><strong>Budget:</strong> ${budget || 'Not specified'}</li>
+          <li style="margin-bottom: 8px;"><strong>Requested Package:</strong> ${selectedFeatures ? selectedFeatures.join(', ') : 'All-Inclusive $699'}</li>
+          <li style="margin-bottom: 8px;"><strong>Notes:</strong> ${notes || 'None'}</li>
+          <li><strong>Timestamp:</strong> ${createdAt || new Date().toISOString()}</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <a href="https://i-want-to-build-for-myself-only-which-is.rork.app/bookings" target="_blank" style="display: inline-block; background: #0f172a; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 14px;">
+          Open in Nearsite CEO App →
+        </a>
+      </div>
+    </div>
   `;
 }
 
@@ -398,16 +409,28 @@ export async function sendContactEmails(contact: ContactEmailData): Promise<{
   `;
 
   const adminHtml = `
-    <h2>New Contact Inquiry from Website</h2>
-    <ul>
-      <li><strong>Name:</strong> ${contact.name}</li>
-      <li><strong>Email:</strong> <a href="mailto:${contact.email}">${contact.email}</a></li>
-      <li><strong>Business:</strong> ${contact.businessName || 'N/A'}</li>
-      <li><strong>Existing Website:</strong> ${contact.existingWebsite || 'None'}</li>
-      <li><strong>Service Interest:</strong> ${contact.serviceInterest || 'N/A'}</li>
-      <li><strong>Timeline:</strong> ${contact.timeline || 'N/A'}</li>
-      <li><strong>Message:</strong> ${contact.message}</li>
-    </ul>
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; color: #111; line-height: 1.6;">
+      <h2 style="color: #0284c7; margin-bottom: 8px;">📬 New Lead Inquiry from Website!</h2>
+      <p style="font-size: 15px; margin-top: 0;">A prospect reached out on your website contact form:</p>
+
+      <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 20px 0;">
+        <ul style="list-style: none; padding: 0; margin: 0; font-size: 14px;">
+          <li style="margin-bottom: 8px;"><strong>Name:</strong> ${contact.name}</li>
+          <li style="margin-bottom: 8px;"><strong>Email:</strong> <a href="mailto:${contact.email}" style="color: #2563eb; font-weight: 600;">${contact.email}</a></li>
+          <li style="margin-bottom: 8px;"><strong>Business:</strong> ${contact.businessName || 'N/A'}</li>
+          <li style="margin-bottom: 8px;"><strong>Existing Website:</strong> ${contact.existingWebsite || 'None'}</li>
+          <li style="margin-bottom: 8px;"><strong>Service Interest:</strong> ${contact.serviceInterest || 'N/A'}</li>
+          <li style="margin-bottom: 8px;"><strong>Timeline:</strong> ${contact.timeline || 'N/A'}</li>
+          <li style="margin-top: 12px; padding-top: 12px; border-top: 1px dashed #cbd5e1;"><strong>Message:</strong><br/>${contact.message}</li>
+        </ul>
+      </div>
+
+      <div style="margin-top: 24px;">
+        <a href="https://i-want-to-build-for-myself-only-which-is.rork.app/leads" target="_blank" style="display: inline-block; background: #0f172a; color: #ffffff; padding: 12px 24px; border-radius: 10px; font-weight: 600; text-decoration: none; font-size: 14px;">
+          Open in Nearsite CEO App (/leads) →
+        </a>
+      </div>
+    </div>
   `;
 
   if (!transporter) {

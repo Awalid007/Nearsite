@@ -35,6 +35,10 @@ export default function App() {
         setCurrentView('contact');
       } else if (hash === '#blog') {
         setCurrentView('blog');
+      } else if (hash === '#privacy') {
+        setLegalModalType('privacy');
+      } else if (hash === '#terms') {
+        setLegalModalType('terms');
       } else if (hash === '#home' || hash === '' || hash.startsWith('#about') || hash.startsWith('#pricing') || hash.startsWith('#services')) {
         setCurrentView('home');
       }
@@ -184,7 +188,13 @@ export default function App() {
       <LegalModal
         isOpen={!!legalModalType}
         type={legalModalType}
-        onClose={() => setLegalModalType(null)}
+        onSelectType={(newType) => setLegalModalType(newType)}
+        onClose={() => {
+          setLegalModalType(null);
+          if (window.location.hash === '#privacy' || window.location.hash === '#terms') {
+            window.history.replaceState(null, '', window.location.pathname);
+          }
+        }}
       />
     </div>
   );

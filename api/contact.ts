@@ -1,4 +1,5 @@
 import { sendContactEmails, ContactEmailData } from '../server/emailService';
+import { addLeadToStore } from './ceo-feed';
 
 export default async function handler(req: any, res: any) {
   res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -24,6 +25,22 @@ export default async function handler(req: any, res: any) {
     if (!contactData || !contactData.email || !contactData.name) {
       return res.status(400).json({ error: 'Missing required fields: email and name are required.' });
     }
+
+    // Save formatted lead for Nearsite CEO
+    const now = new Date().toISOString();
+    addLeadToStore({
+      id: `lead-${Date.now().toString(36)}`,
+      name: contactData.name,
+      business: contactData.businessName || 'Website Inquiry',
+      email: contactData.email,
+      interestedIn: contactData.serviceInterest || 'growth',
+      source: 'Website form',
+      message: contactData.message,
+      status: 'new',
+      notes: [],
+      createdAt: now,
+      updatedAt: now,
+    });
 
     const result = await sendContactEmails(contactData);
     return res.status(200).json(result);
