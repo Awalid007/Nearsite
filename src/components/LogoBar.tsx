@@ -1,99 +1,76 @@
 import React from 'react';
-import { Flame, UtensilsCrossed, Dumbbell, Scissors, Building2 } from 'lucide-react';
-import { motion } from 'motion/react';
+import { Reveal } from './ui';
+import { TRUST_STATS, TRUST_LOGOS, TRADES } from '../data/homeData';
 
-interface LogoBarProps {
-  onSelectClient?: (name: string) => void;
-}
-
-export const LogoBar: React.FC<LogoBarProps> = ({ onSelectClient }) => {
-  const clients = [
-    {
-      name: "Joe's Plumbing",
-      icon: Flame,
-      industry: 'Plumbing & HVAC',
-    },
-    {
-      name: 'Verde Kitchen',
-      icon: UtensilsCrossed,
-      industry: 'Farm Bistro',
-    },
-    {
-      name: 'FitLocal Gym',
-      icon: Dumbbell,
-      industry: 'Fitness Studio',
-    },
-    {
-      name: 'Bloom Hair Studio',
-      icon: Scissors,
-      industry: 'Salon & Spa',
-    },
-    {
-      name: 'PrimeRealty',
-      icon: Building2,
-      industry: 'Real Estate',
-    },
-  ];
+/** Trust bar: stats + client logos (placeholders until you add real ones). */
+export const LogoBar: React.FC = () => {
+  const logos = [...TRUST_LOGOS, ...TRUST_LOGOS]; // duplicated for a seamless loop
 
   return (
-    <section className="relative border-y border-white/5 py-12 px-4 sm:px-6 lg:px-8 bg-[#060e0e] overflow-hidden">
-      {/* Decorative crosshair marks */}
-      <div className="absolute -top-[7px] left-6 text-white/10 font-mono text-xs select-none pointer-events-none">+</div>
-      <div className="absolute -top-[7px] right-6 text-white/10 font-mono text-xs select-none pointer-events-none">+</div>
-      <div className="absolute -bottom-[7px] left-6 text-white/10 font-mono text-xs select-none pointer-events-none">+</div>
-      <div className="absolute -bottom-[7px] right-6 text-white/10 font-mono text-xs select-none pointer-events-none">+</div>
+    <section aria-label="Trusted by local businesses" className="border-y border-white/10 bg-[#081414] py-12 sm:py-14">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <Reveal>
+          <dl className="grid grid-cols-3 gap-4 text-center sm:gap-8">
+            {TRUST_STATS.map((s) => (
+              <div key={s.label} className="flex flex-col-reverse">
+                <dt className="mt-1.5 text-xs text-slate-400 sm:text-sm">{s.label}</dt>
+                <dd className="text-3xl font-semibold tracking-tight text-white sm:text-5xl">
+                  {s.value}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </Reveal>
 
-      <div className="max-w-6xl mx-auto">
-        <motion.p
-          initial={{ opacity: 0, y: 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-40px' }}
-          transition={{ duration: 0.5 }}
-          className="text-center text-xs font-normal text-slate-400 tracking-wide mb-8"
-        >
-          Trusted by local businesses across industries
-        </motion.p>
+        <p className="mt-12 text-center text-xs font-semibold uppercase tracking-[0.16em] text-slate-400">
+          Trusted by local businesses
+        </p>
 
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: '-40px' }}
-          variants={{
-            hidden: { opacity: 0 },
-            visible: {
-              opacity: 1,
-              transition: {
-                staggerChildren: 0.1,
-              },
-            },
-          }}
-          className="flex flex-wrap items-center justify-center gap-8 sm:gap-12 md:gap-16"
+        {/* Logo marquee */}
+        <div
+          className="relative mt-6 overflow-hidden [mask-image:linear-gradient(to_right,transparent,#000_12%,#000_88%,transparent)]"
+          aria-hidden="true"
         >
-          {clients.map((client) => {
-            const Icon = client.icon;
-            return (
-              <motion.button
-                key={client.name}
-                type="button"
-                variants={{
-                  hidden: { opacity: 0, y: 12 },
-                  visible: { opacity: 1, y: 0, transition: { duration: 0.4 } },
-                }}
-                whileHover={{ scale: 1.06, y: -2 }}
-                whileTap={{ scale: 0.96 }}
-                onClick={() => onSelectClient?.(client.name)}
-                className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors duration-200 group focus:outline-none cursor-pointer"
-              >
-                <div className="w-5 h-5 flex items-center justify-center text-slate-400 group-hover:text-emerald-400 transition-colors">
-                  <Icon className="w-4 h-4" />
-                </div>
-                <span className="text-sm sm:text-base font-semibold tracking-tight">
-                  {client.name}
+          <div className="flex w-max animate-marquee items-center gap-12 hover:[animation-play-state:paused]">
+            {logos.map((l, i) =>
+              l.src ? (
+                <img
+                  key={`${l.name}-${i}`}
+                  src={l.src}
+                  alt=""
+                  loading="lazy"
+                  className="h-8 w-auto opacity-60 grayscale transition hover:opacity-100 hover:grayscale-0"
+                />
+              ) : (
+                <span
+                  key={`${l.name}-${i}`}
+                  className="flex h-10 items-center gap-2 whitespace-nowrap text-lg font-semibold text-slate-400"
+                >
+                  <span className="h-6 w-6 rounded-md border border-dashed border-slate-600" />
+                  {l.name}
                 </span>
-              </motion.button>
-            );
-          })}
-        </motion.div>
+              )
+            )}
+          </div>
+        </div>
+        {/* Real list for screen readers */}
+        <ul className="sr-only">
+          {TRUST_LOGOS.map((l) => (
+            <li key={l.name}>{l.name}</li>
+          ))}
+        </ul>
+
+        {/* Trades served */}
+        <ul className="mt-10 flex flex-wrap items-center justify-center gap-2">
+          {TRADES.map((t) => (
+            <li
+              key={t}
+              className="rounded-full border border-white/10 bg-white/[0.03] px-3.5 py-1.5 text-xs font-medium text-slate-300 sm:text-sm"
+            >
+              {t}
+            </li>
+          ))}
+        </ul>
       </div>
     </section>
   );

@@ -1,22 +1,69 @@
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Nearsite — Websites for Local Businesses</title>
-    <meta name="description" content="Nearsite builds fast, beautiful websites for local businesses that want to get found online, win more customers, and look more professional than the competition." />
-    <meta property="og:title" content="Nearsite — Websites for Local Businesses" />
-    <meta property="og:description" content="Nearsite builds fast, beautiful websites for local businesses that want to get found online, win more customers, and look more professional than the competition." />
+    <meta name="theme-color" content="#060e0e" />
+
+    <title>Nearsite | Websites That Get Local Businesses More Calls &amp; Customers</title>
+    <meta
+      name="description"
+      content="Nearsite builds fast, mobile-first websites for roofers, HVAC, plumbers, landscapers, salons and other local businesses, plus online booking, instant lead follow-up and review requests. Get your free website mockup."
+    />
+    <link rel="canonical" href="https://nearsite-iota.vercel.app/" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+    <!-- Social sharing -->
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Nearsite" />
+    <meta property="og:title" content="Nearsite | Websites That Get Local Businesses More Calls &amp; Customers" />
+    <meta
+      property="og:description"
+      content="Fast, mobile-first websites with booking, instant follow-up and review requests built in. Get a free mockup of your new site."
+    />
+    <meta property="og:url" content="https://nearsite-iota.vercel.app/" />
+    <!-- TODO: add a 1200x630 image at /public/og-image.png -->
+    <meta property="og:image" content="https://nearsite-iota.vercel.app/og-image.png" />
     <meta name="twitter:card" content="summary_large_image" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <meta name="twitter:title" content="Nearsite | Websites That Get Local Businesses More Calls" />
+    <meta
+      name="twitter:description"
+      content="Fast, mobile-first websites with booking, instant follow-up and review requests built in. Get a free mockup."
+    />
+    <meta name="twitter:image" content="https://nearsite-iota.vercel.app/og-image.png" />
+
+    <!-- Fonts: Plus Jakarta Sans (UI) + Instrument Serif (accent words) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Structured data for local search -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": "Nearsite",
+        "url": "https://nearsite-iota.vercel.app/",
+        "description": "Website design, online booking, instant lead follow-up, review requests and AI chat/voice assistants for local businesses.",
+        "areaServed": "US",
+        "serviceType": [
+          "Website design for local businesses",
+          "Online booking setup",
+          "Lead and missed-call follow-up automation",
+          "Google review request automation",
+          "AI voice and chat assistant"
+        ]
+      }
+    </script>
+
     <script type="text/javascript" id="hs-script-loader" async defer src="//js-na2.hs-scripts.com/245727916.js"></script>
   </head>
-  <body class="bg-[#060e0e] text-[#f6f9f7] antialiased selection:bg-emerald-400 selection:text-black font-['Plus_Jakarta_Sans',sans-serif]">
+  <body class="bg-[#060e0e] text-[#f6f9f7] antialiased font-sans">
+    <noscript>Nearsite builds websites for local businesses. Please enable JavaScript to view this site, or email us for a free website mockup.</noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

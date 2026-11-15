@@ -1,9 +1,51 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------
+   Nearsite design tokens
+   One accent color (electric lime) on a deep green-black base.
+   The legacy "emerald" scale is remapped to the lime accent so the
+   Contact, Blog, Legal and Booking screens match the new homepage
+   without needing to be edited.
+------------------------------------------------------------------- */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-display: "Instrument Serif", ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-ink: #060e0e;
+  --color-surface: #0b1919;
+  --color-surface-2: #0f2020;
+  --color-accent: #c8ff3e;
+
+  --color-emerald-50: #f7ffe0;
+  --color-emerald-100: #ecffb8;
+  --color-emerald-200: #e2ff8f;
+  --color-emerald-300: #d8ff6a;
+  --color-emerald-400: #c8ff3e;
+  --color-emerald-500: #b6f21d;
+  --color-emerald-600: #94c914;
+  --color-emerald-700: #6f9a0f;
+  --color-emerald-800: #4f6f0e;
+  --color-emerald-900: #35490d;
+  --color-emerald-950: #1b2a06;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+
+  @keyframes marquee {
+    from { transform: translateX(0); }
+    to { transform: translateX(-50%); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
     background-color: #060e0e;
+    -webkit-text-size-adjust: 100%;
   }
 
   body {
@@ -12,5 +54,74 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
   }
+
+  ::selection {
+    background: #c8ff3e;
+    color: #060e0e;
+  }
+
+  /* Visible keyboard focus everywhere */
+  :focus-visible {
+    outline: 2px solid #c8ff3e;
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+
+  /* Anchors jump below the sticky nav */
+  section[id] {
+    scroll-margin-top: 80px;
+  }
 }
 
+@layer utilities {
+  /* Faint grid used behind hero and CTA */
+  .bg-grid {
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
+    -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 30%, transparent 75%);
+  }
+
+  /* Cursor-follow spotlight used by cards (see SpotlightCard) */
+  .spotlight::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: radial-gradient(
+      360px circle at var(--mx, 50%) var(--my, 0%),
+      rgba(200, 255, 62, 0.11),
+      transparent 60%
+    );
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .spotlight:hover::before {
+    opacity: 1;
+  }
+
+  /* Hide scrollbars on horizontal scrollers */
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/* Respect users who prefer less motion */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

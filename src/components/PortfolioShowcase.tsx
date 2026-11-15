@@ -1,217 +1,172 @@
 import React, { useState } from 'react';
-import { PORTFOLIO_CASES } from '../data/siteData';
-import { Star, Check, ExternalLink, ArrowRight, Smartphone, Monitor } from 'lucide-react';
+import { ChevronsLeftRight } from 'lucide-react';
+import { Accent, Reveal, SectionHead } from './ui';
+import { WORK, WorkExample } from '../data/homeData';
 
-interface PortfolioShowcaseProps {
-  onOpenQuoteWithBusiness: (business: string) => void;
-}
-
-export const PortfolioShowcase: React.FC<PortfolioShowcaseProps> = ({ onOpenQuoteWithBusiness }) => {
-  const [selectedCaseId, setSelectedCaseId] = useState<string>('verde');
-  const [deviceMode, setDeviceMode] = useState<'desktop' | 'mobile'>('desktop');
-
-  const activeCase = PORTFOLIO_CASES.find((c) => c.id === selectedCaseId) || PORTFOLIO_CASES[0];
-
-  return (
-    <section id="portfolio-section" className="py-20 sm:py-28 bg-slate-900 text-white relative overflow-hidden">
-      {/* Subtle background glow */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/10 blur-3xl pointer-events-none" />
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto space-y-4 mb-12">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950/80 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider">
-            <span>Our Work in Action</span>
-          </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
-            Websites that turn local clicks into real-world customers
-          </h2>
-          <p className="text-base sm:text-lg text-slate-400">
-            Explore recent websites designed and launched by Nearsite for local neighborhood favorites.
-          </p>
-        </div>
-
-        {/* Business Selector Pills */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-10">
-          {PORTFOLIO_CASES.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => setSelectedCaseId(item.id)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all ${
-                selectedCaseId === item.id
-                  ? 'bg-emerald-500 text-slate-950 shadow-lg shadow-emerald-500/20'
-                  : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
-              }`}
-            >
-              {item.businessName}
-            </button>
+/** Illustrative site sketches shown until you add real screenshots. */
+const SiteSketch: React.FC<{ variant: 'old' | 'new' }> = ({ variant }) => {
+  if (variant === 'old') {
+    return (
+      <div className="h-full w-full bg-[#d9d6cf] p-4 text-[#555] sm:p-6" aria-hidden="true">
+        <div className="mb-3 h-5 w-2/3 bg-[#a9a59b]" />
+        <div className="flex gap-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-3 w-12 bg-[#bbb7ac]" />
           ))}
         </div>
-
-        {/* Active Case Study Spotlight */}
-        <div className="grid lg:grid-cols-12 gap-8 items-center bg-slate-800/80 rounded-3xl p-6 sm:p-10 border border-slate-700/80 shadow-2xl">
-          {/* Left: Case Info & Metrics */}
-          <div className="lg:col-span-5 space-y-6 text-left">
-            <div className="flex items-center gap-2">
-              <span className="text-xs uppercase font-mono font-bold tracking-wider px-2.5 py-1 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                {activeCase.badge}
-              </span>
-              <div className="flex items-center text-amber-400">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-3.5 h-3.5 fill-amber-400" />
-                ))}
-              </div>
-            </div>
-
-            <h3 className="text-2xl sm:text-3xl font-bold text-white leading-tight">
-              {activeCase.businessName}
-            </h3>
-
-            <p className="text-slate-300 text-sm sm:text-base leading-relaxed">
-              {activeCase.headline}
-            </p>
-
-            {/* Impact Metric Callout */}
-            <div className="p-4 rounded-xl bg-slate-900/90 border border-emerald-500/30">
-              <div className="text-xs uppercase tracking-wider text-emerald-400 font-bold mb-1">
-                Verified Outcome:
-              </div>
-              <div className="text-base font-bold text-white">
-                {activeCase.results}
-              </div>
-            </div>
-
-            {/* Key Features implemented */}
-            <div className="space-y-2">
-              <div className="text-xs uppercase font-semibold text-slate-400 tracking-wider">
-                Included Features:
-              </div>
-              <div className="space-y-1.5">
-                {activeCase.features.map((feat, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm text-slate-300">
-                    <Check className="w-4 h-4 text-emerald-400 shrink-0" />
-                    <span>{feat}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="pt-2">
-              <button
-                type="button"
-                onClick={() => onOpenQuoteWithBusiness(activeCase.businessName)}
-                className="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-5 py-2.5 rounded-xl text-sm transition-colors"
-              >
-                <span>Get a Site Like {activeCase.businessName.split(' ')[0]}’s</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Right: Device Mockup Preview */}
-          <div className="lg:col-span-7 flex flex-col items-center">
-            {/* Device Switcher */}
-            <div className="flex items-center gap-2 mb-4 bg-slate-900/80 p-1 rounded-xl border border-slate-700 text-xs">
-              <button
-                type="button"
-                onClick={() => setDeviceMode('desktop')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-colors ${
-                  deviceMode === 'desktop' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Monitor className="w-3.5 h-3.5" />
-                <span>Desktop View</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setDeviceMode('mobile')}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg font-medium transition-colors ${
-                  deviceMode === 'mobile' ? 'bg-emerald-500 text-slate-950 font-bold' : 'text-slate-400 hover:text-white'
-                }`}
-              >
-                <Smartphone className="w-3.5 h-3.5" />
-                <span>Mobile View (99 Speed)</span>
-              </button>
-            </div>
-
-            {/* Mockup Frame */}
-            {deviceMode === 'desktop' ? (
-              <div className="w-full max-w-xl bg-slate-950 rounded-2xl border border-slate-700 shadow-2xl overflow-hidden text-left">
-                {/* Desktop top bar */}
-                <div className="bg-slate-900 px-4 py-2.5 flex items-center justify-between border-b border-slate-800 text-xs text-slate-400">
-                  <div className="flex items-center gap-2">
-                    <div className="flex gap-1.5">
-                      <div className="w-2.5 h-2.5 rounded-full bg-rose-500/80" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-amber-500/80" />
-                      <div className="w-2.5 h-2.5 rounded-full bg-emerald-500/80" />
-                    </div>
-                    <span className="font-mono text-[11px] text-slate-300">
-                      https://www.{activeCase.businessName.toLowerCase().replace(/[^a-z0-9]/g, '')}.com
-                    </span>
-                  </div>
-                  <span className="text-[10px] bg-emerald-950 text-emerald-400 px-2 py-0.5 rounded font-mono border border-emerald-800">
-                    99/100 Core Vitals
-                  </span>
-                </div>
-
-                {/* Mock Content */}
-                <div className="p-6 bg-slate-900/50 space-y-4">
-                  <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div className="font-extrabold text-white text-base">
-                      {activeCase.businessName}
-                    </div>
-                    <div className="text-xs text-slate-400 flex gap-3">
-                      <span>Menu / Services</span>
-                      <span>About</span>
-                      <span className="text-emerald-400 font-bold">Contact / Book</span>
-                    </div>
-                  </div>
-
-                  <div className="bg-gradient-to-r from-slate-900 to-slate-800 p-6 rounded-xl border border-slate-700 space-y-2">
-                    <div className="text-[11px] text-emerald-400 font-mono uppercase">
-                      Local Authority Guaranteed
-                    </div>
-                    <div className="text-lg font-bold text-white">
-                      {activeCase.headline}
-                    </div>
-                    <div className="flex items-center gap-3 pt-2">
-                      <span className="bg-emerald-500 text-slate-950 font-bold text-xs px-3 py-1.5 rounded-lg">
-                        Get Started Today
-                      </span>
-                      <span className="text-xs text-slate-300">
-                        ⭐ 5.0 Star Rated locally
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="w-64 bg-slate-950 rounded-[32px] p-3 border-4 border-slate-700 shadow-2xl text-left">
-                {/* Mobile screen notch */}
-                <div className="w-20 h-3 bg-slate-800 rounded-full mx-auto mb-2" />
-                <div className="bg-slate-900 rounded-2xl p-4 space-y-3">
-                  <div className="text-xs font-bold text-white flex justify-between items-center">
-                    <span>{activeCase.businessName.split(' ')[0]}</span>
-                    <span className="text-[10px] bg-emerald-500 text-slate-950 px-1.5 py-0.5 rounded font-bold">
-                      CALL NOW
-                    </span>
-                  </div>
-                  <div className="p-3 bg-slate-800 rounded-lg text-xs space-y-1">
-                    <div className="font-bold text-emerald-400 text-[11px]">
-                      {activeCase.badge}
-                    </div>
-                    <div className="text-slate-200 font-semibold text-xs">
-                      1-Tap Mobile Booking
-                    </div>
-                  </div>
-                  <div className="bg-emerald-500 text-slate-950 text-center py-1.5 rounded-lg text-xs font-bold">
-                    Book Appointment
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+        <div className="mt-4 h-28 w-full bg-[#b9b5a9] sm:h-40" />
+        <div className="mt-4 space-y-2">
+          <div className="h-2 w-full bg-[#bbb7ac]" />
+          <div className="h-2 w-11/12 bg-[#bbb7ac]" />
+          <div className="h-2 w-4/5 bg-[#bbb7ac]" />
+          <div className="h-2 w-full bg-[#bbb7ac]" />
+          <div className="h-2 w-2/3 bg-[#bbb7ac]" />
         </div>
+      </div>
+    );
+  }
+  return (
+    <div className="h-full w-full bg-[#0b1919] p-4 sm:p-6" aria-hidden="true">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="h-6 w-6 rounded-lg bg-accent" />
+          <span className="h-2.5 w-20 rounded-full bg-white/80" />
+        </div>
+        <span className="h-7 w-20 rounded-full bg-accent" />
+      </div>
+      <div className="mt-6 sm:mt-10">
+        <div className="h-5 w-3/4 rounded-full bg-white sm:h-7" />
+        <div className="mt-2.5 h-5 w-1/2 rounded-full bg-white sm:h-7" />
+        <div className="mt-4 h-2.5 w-2/3 rounded-full bg-white/25" />
+        <div className="mt-5 flex gap-2">
+          <span className="h-9 w-28 rounded-full bg-accent" />
+          <span className="h-9 w-24 rounded-full border border-white/25" />
+        </div>
+      </div>
+      <div className="mt-6 grid grid-cols-3 gap-2 sm:mt-8 sm:gap-3">
+        {[0, 1, 2].map((i) => (
+          <div key={i} className="h-16 rounded-xl bg-white/[0.06] sm:h-24" />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const BeforeAfter: React.FC<{ item: WorkExample }> = ({ item }) => {
+  const [pos, setPos] = useState(50);
+
+  return (
+    <div
+      className="relative aspect-[4/3] w-full select-none overflow-hidden rounded-2xl border border-white/10 focus-within:ring-2 focus-within:ring-accent sm:aspect-[16/10]"
+      style={{ touchAction: 'pan-y' }}
+    >
+      {/* Before (bottom layer) */}
+      <div className="absolute inset-0">
+        {item.beforeSrc ? (
+          <img src={item.beforeSrc} alt={`${item.client} website before`} loading="lazy" className="h-full w-full object-cover object-top" />
+        ) : (
+          <SiteSketch variant="old" />
+        )}
+      </div>
+      {/* After (revealed from the left) */}
+      <div className="absolute inset-0" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
+        {item.afterSrc ? (
+          <img src={item.afterSrc} alt={`${item.client} website after`} loading="lazy" className="h-full w-full object-cover object-top" />
+        ) : (
+          <SiteSketch variant="new" />
+        )}
+      </div>
+
+      {/* Labels */}
+      <span className="absolute left-3 top-3 rounded-full bg-accent px-3 py-1 text-xs font-bold uppercase tracking-wide text-[#060e0e]">
+        After
+      </span>
+      <span className="absolute right-3 top-3 rounded-full bg-black/70 px-3 py-1 text-xs font-bold uppercase tracking-wide text-white">
+        Before
+      </span>
+
+      {/* Divider + handle */}
+      <div
+        className="pointer-events-none absolute inset-y-0 w-0.5 bg-accent"
+        style={{ left: `${pos}%` }}
+        aria-hidden="true"
+      >
+        <span className="absolute top-1/2 left-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-[#060e0e] shadow-lg">
+          <ChevronsLeftRight className="h-5 w-5" />
+        </span>
+      </div>
+
+      {/* Accessible, keyboard-friendly control */}
+      <input
+        type="range"
+        min={0}
+        max={100}
+        value={pos}
+        onChange={(e) => setPos(Number(e.target.value))}
+        aria-label="Drag to compare the old website with the new website"
+        className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
+      />
+    </div>
+  );
+};
+
+export const PortfolioShowcase: React.FC = () => {
+  const [active, setActive] = useState(WORK[0].id);
+  const item = WORK.find((w) => w.id === active) ?? WORK[0];
+
+  return (
+    <section id="work" className="px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+      <div className="mx-auto max-w-5xl">
+        <SectionHead
+          eyebrow="Our work"
+          title={
+            <>
+              See the <Accent>difference</Accent> a better site makes.
+            </>
+          }
+          sub="Drag the slider to compare a typical outdated local-business site with a Nearsite rebuild."
+        />
+
+        <Reveal className="mt-12">
+          {/* Tabs */}
+          <div role="tablist" aria-label="Example industries" className="no-scrollbar mb-5 flex justify-center gap-2 overflow-x-auto">
+            {WORK.map((w) => (
+              <button
+                key={w.id}
+                role="tab"
+                aria-selected={active === w.id}
+                aria-controls="work-panel"
+                id={`tab-${w.id}`}
+                onClick={() => setActive(w.id)}
+                className={`shrink-0 rounded-full border px-5 py-2 text-sm font-semibold transition-colors ${
+                  active === w.id
+                    ? 'border-accent bg-accent text-[#060e0e]'
+                    : 'border-white/10 bg-white/[0.03] text-slate-300 hover:border-white/25 hover:text-white'
+                }`}
+              >
+                {w.trade}
+              </button>
+            ))}
+          </div>
+
+          <div
+            id="work-panel"
+            role="tabpanel"
+            aria-labelledby={`tab-${item.id}`}
+            className="rounded-[2rem] border border-white/10 bg-surface p-3 sm:p-5"
+          >
+            <BeforeAfter key={item.id} item={item} />
+            <div className="flex flex-col gap-3 px-2 pb-2 pt-5 sm:flex-row sm:items-center sm:justify-between sm:px-3">
+              <div>
+                <p className="text-lg font-semibold text-white">{item.client}</p>
+                <p className="mt-1 max-w-md text-sm leading-relaxed text-slate-400">{item.summary}</p>
+              </div>
+              <p className="shrink-0 rounded-full border border-accent/30 bg-accent/10 px-4 py-2 text-sm font-semibold text-accent">
+                {item.result}
+              </p>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
